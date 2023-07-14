@@ -3,6 +3,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '../components/ui/avatar';
 import { Button } from '../components/ui/button';
 import { DropdownMenuSeparator } from '../components/ui/dropdown-menu';
 import { DropdownMenuLabel } from '../components/ui/dropdown-menu';
+import logo from '@/assets/images/logo.png';
 import {
   DropdownMenuItem,
   DropdownMenu,
@@ -26,12 +27,11 @@ export default function Navbar() {
     });
   };
   return (
-    <nav className="w-full h-16 fixed top backdrop-blur-lg z-10">
+    <nav className="w-full h-24 fixed top backdrop-blur-lg z-10">
       <div className="h-full w-full bg-white/60">
         <div className="flex items-center justify-between w-full md:max-w-7xl h-full mx-auto ">
           <div>
-            {/* <img className="h-8" src={logo} alt="log" /> */}
-            <h2 className="text-3xl font-bold">HogwartsBookShelf</h2>
+            <img className="h-20" src={logo} alt="log" />
           </div>
           <div>
             <ul className="flex items-center">
@@ -51,7 +51,9 @@ export default function Navbar() {
                 </Button>
               </li>
               <li>
-                <AiOutlineFolderAdd size="25" />
+                <Button variant="ghost">
+                  <AiOutlineFolderAdd size="25" />
+                </Button>
               </li>
               <li>
                 <Button variant="ghost">
