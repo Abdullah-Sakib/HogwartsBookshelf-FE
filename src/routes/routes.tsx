@@ -19,15 +19,15 @@ const routes = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: '/products',
+        path: '/books',
         element: <Products />,
       },
       {
-        path: '/product-details/:id',
+        path: '/book-details/:id',
         element: <ProductDetails />,
       },
       {
-        path: '/checkout',
+        path: '/add-new-book',
         element: (
           <PrivateRoute>
             <Checkout />
