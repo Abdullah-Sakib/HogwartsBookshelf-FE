@@ -8,9 +8,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useForm } from 'react-hook-form';
 import { FcGoogle } from 'react-icons/fc';
-import { useAppDispatch, useAppSelector } from '@/redux/hooks';
-import { loginUser } from '@/redux/features/user/userSlice';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useLoginMutation } from '@/redux/features/user/userApi';
+import { useToast } from './ui/use-toast';
+import { Toaster } from './ui/Toaster';
 
 type UserAuthFormProps = React.HTMLAttributes<HTMLDivElement>;
 
@@ -21,8 +22,11 @@ interface LoginFormInputs {
 
 export function LoginForm({ className, ...props }: UserAuthFormProps) {
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
-  const { user, isLoading } = useAppSelector((state) => state.user);
+  const { toast } = useToast();
+
+  // API call
+  const [login, { isError, isLoading, isSuccess, error }] = useLoginMutation();
+
   const {
     register,
     handleSubmit,
@@ -30,20 +34,25 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
   } = useForm<LoginFormInputs>();
 
   const onSubmit = (data: LoginFormInputs) => {
-    dispatch(loginUser({ email: data.email, password: data.password }));
+    login({ email: data.email, password: data.password });
   };
 
   const { state } = useLocation();
 
   React.useEffect(() => {
-    if (user.email && !isLoading) {
+    if (isSuccess && !isLoading) {
       if (state?.path) {
         navigate(state?.path);
       } else {
         navigate('/');
       }
+      toast({
+        description: 'You have logged in successfully',
+      });
     }
-  }, [user.email, isLoading, navigate, state]);
+  }, [isLoading, navigate, state, isSuccess, toast, isError, error, isError]);
+
+  console.log(isError, error, isLoading, isSuccess);
 
   return (
     <div className={cn('grid gap-6', className)} {...props}>

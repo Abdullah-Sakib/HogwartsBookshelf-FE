@@ -1,5 +1,4 @@
 'use client';
-
 import * as React from 'react';
 
 import { cn } from '@/lib/utils';
@@ -8,11 +7,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useForm } from 'react-hook-form';
 import { FcGoogle } from 'react-icons/fc';
-
-// import { createUser } from '@/redux/features/user/userSlice';
-import { useAppSelector } from '@/redux/hooks';
 import { useNavigate } from 'react-router-dom';
 import { useSignUpMutation } from '@/redux/features/user/userApi';
+import { useToast } from './ui/use-toast';
 
 type UserAuthFormProps = React.HTMLAttributes<HTMLDivElement>;
 
@@ -26,10 +23,14 @@ interface SignupFormInputs {
 }
 
 export function SignupForm({ className, ...props }: UserAuthFormProps) {
-  const [signUp, { isError, isLoading: isUserLoading, isSuccess, error }] =
-    useSignUpMutation();
+  const { toast } = useToast();
   const navigate = useNavigate();
-  const { user, isLoading } = useAppSelector((state) => state.user);
+
+  // API call
+  const [signUp, { isError, isLoading, isSuccess, error }] =
+    useSignUpMutation();
+
+  // react hook form
   const {
     register,
     handleSubmit,
@@ -37,6 +38,7 @@ export function SignupForm({ className, ...props }: UserAuthFormProps) {
     getValues,
   } = useForm<SignupFormInputs>();
 
+  // handle submit
   const onSubmit = (data: SignupFormInputs) => {
     const newData = {
       name: data.name,
@@ -45,22 +47,35 @@ export function SignupForm({ className, ...props }: UserAuthFormProps) {
       role: 'user',
       phoneNumber: data.phoneNumber,
     };
-    console.log(newData);
     signUp(newData);
   };
 
+  // password and confirm password validation
   const validatePassword = (value: string) => {
     const { password } = getValues();
     return value === password || 'Passwords do not match';
   };
 
+  // navigate after successful signup and notify user for error and successes
   React.useEffect(() => {
-    if (user.email && !isLoading) {
+    if (isSuccess && !isLoading) {
       navigate('/');
+      toast({
+        description: 'You have logged in successfully',
+      });
     }
-  }, [user.email, isLoading, navigate]);
+    // if (isError === true) {
+    //   console.log('error happend');
+    //   navigate('/');
+    //   toast({
+    //     variant: 'destructive',
+    //     title: 'Uh oh! Something went wrong.',
+    //     description: 'There was a problem with your request.',
+    //   });
+    // }
+  }, [isError, isLoading, isSuccess, navigate, toast, error]);
 
-  console.log(isError, error, isUserLoading, isSuccess);
+  // console.log(isError, error, isLoading, isSuccess);
 
   return (
     <div className={cn('grid gap-6', className)} {...props}>
