@@ -1,5 +1,8 @@
+import Book from '@/components/book';
+import { IBook } from '@/types/globalTypes';
+
 const Books = () => {
-  const booksdata = [
+  const booksdata: IBook[] = [
     {
       title: 'The Great Gatsby',
       author: 'F. Scott Fitzgerald',
@@ -81,39 +84,10 @@ const Books = () => {
         'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8Ym9vayUyMGNvdmVyfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60',
     },
   ];
-
   return (
-    <section className="text-gray-600 body-font">
-      <div className="container px-5 py-24 mx-auto">
-        <div className="flex flex-wrap -m-4">
-          {booksdata?.map((book, i) => (
-            <div key={i} className="lg:w-1/4 md:w-1/2 p-4 w-full">
-              <a className="block relative h-48 rounded overflow-hidden">
-                <img
-                  alt="ecommerce"
-                  className="object-cover object-center w-full h-full block"
-                  src={book.image}
-                />
-              </a>
-              <div className="mt-4">
-                <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">
-                  {book.genre}
-                </h3>
-                <h2 className="text-gray-900 title-font text-lg font-medium">
-                  {book.title}
-                </h2>
-                <h2 className="text-gray-900 title-font text-base font-medium">
-                  @{book.author}
-                </h2>
-                <p className="mt-1 font-semibold">
-                  Published: {book.publication_date}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
+    <div>
+      <Book data={booksdata} />
+    </div>
   );
 };
 

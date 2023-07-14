@@ -30,7 +30,9 @@ export default function Navbar() {
       <div className="h-full w-full bg-white/60">
         <div className="flex items-center justify-between w-full md:max-w-7xl h-full mx-auto ">
           <div>
-            <img className="h-20 rounded-full" src={logo} alt="log" />
+            <Link to="/">
+              <img className="h-20 rounded-full" src={logo} alt="log" />
+            </Link>
           </div>
           <div>
             <ul className="flex items-center">
@@ -63,7 +65,10 @@ export default function Navbar() {
                 <DropdownMenu>
                   <DropdownMenuTrigger className="outline-none">
                     <Avatar>
-                      <AvatarImage src="https://github.com/shadcn.png" />
+                      <AvatarImage
+                        className="object-contain bg-slate-800"
+                        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS946FhBVYtF2hSHPH4hy4LmvJ2JRsmWe8_EA&usqp=CAU"
+                      />
                       <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
                   </DropdownMenuTrigger>
