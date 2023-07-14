@@ -20,8 +20,8 @@ export default function Home() {
             <p>Read from anywhre in the world.</p>
           </div>
         </div>
-        <div className="relative w-[40%]">
-          <img className="w-full rounded-xl" src={banner} alt="" />
+        <div className="relative w-[40%]  rounded-2xl bg-[#728a7c] border-[6px] border-[#728a7c]">
+          <img className="w-full rounded-xl  " src={banner} alt="" />
         </div>
       </div>
       <Books />
