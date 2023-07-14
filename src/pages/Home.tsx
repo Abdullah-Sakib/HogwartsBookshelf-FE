@@ -1,4 +1,5 @@
 import banner from '@/assets/images/books.avif';
+import Books from '@/components/books';
 import Footer from '@/layouts/Footer';
 
 export default function Home() {
@@ -23,6 +24,7 @@ export default function Home() {
           <img className="w-full rounded-xl" src={banner} alt="" />
         </div>
       </div>
+      <Books />
       <Footer />
     </>
   );
