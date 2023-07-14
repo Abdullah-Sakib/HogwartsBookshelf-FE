@@ -1,4 +1,3 @@
-import React from 'react';
 import logo from '@/assets/images/technet-logo-white.png';
 import { RiFacebookBoxFill, RiInstagramLine } from 'react-icons/ri';
 export default function Footer() {
@@ -9,7 +8,8 @@ export default function Footer() {
     <div className="bg-[#242630] text-secondary p-20">
       <div className="flex justify-between">
         <div>
-          <img className="h-10" src={logo} alt="Logo" />
+          {/* <img className="h-10" src={logo} alt="Logo" /> */}
+          <h3 className="text-3xl">HogwartsBookshelf</h3>
         </div>
         <div className="flex gap-20">
           <ul className="space-y-2">

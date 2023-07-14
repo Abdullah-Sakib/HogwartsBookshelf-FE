@@ -105,7 +105,9 @@ const Books = () => {
                 <h2 className="text-gray-900 title-font text-base font-medium">
                   @{book.author}
                 </h2>
-                <p className="mt-1">Published: {book.publication_date}</p>
+                <p className="mt-1 font-semibold">
+                  Published: {book.publication_date}
+                </p>
               </div>
             </div>
           ))}
