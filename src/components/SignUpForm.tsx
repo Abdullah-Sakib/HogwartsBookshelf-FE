@@ -17,6 +17,7 @@ type UserAuthFormProps = React.HTMLAttributes<HTMLDivElement>;
 
 interface SignupFormInputs {
   email: string;
+  name: string;
   password: string;
 }
 
@@ -58,6 +59,16 @@ export function SignupForm({ className, ...props }: UserAuthFormProps) {
               {...register('email', { required: 'Email is required' })}
             />
             {errors.email && <p>{errors.email.message}</p>}
+            <Input
+              id="name"
+              placeholder="Jhon Doe"
+              type="text"
+              autoCapitalize="none"
+              autoComplete="email"
+              autoCorrect="off"
+              {...register('name', { required: 'Name is required' })}
+            />
+            {errors.name && <p>{errors.name.message}</p>}
             <Input
               id="password"
               placeholder="your password"
