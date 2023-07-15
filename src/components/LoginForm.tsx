@@ -10,8 +10,8 @@ import { useForm } from 'react-hook-form';
 import { FcGoogle } from 'react-icons/fc';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useLoginMutation } from '@/redux/features/user/userApi';
-import { useToast } from './ui/use-toast';
 import { toast } from 'react-toastify';
+import { saveToLocalStorage } from '../utils/localstorage.ts';
 
 type UserAuthFormProps = React.HTMLAttributes<HTMLDivElement>;
 
@@ -24,7 +24,8 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
   const navigate = useNavigate();
 
   // API call
-  const [login, { isError, isLoading, isSuccess, error }] = useLoginMutation();
+  const [login, { data, isError, isLoading, isSuccess, error }] =
+    useLoginMutation();
 
   const {
     register,
@@ -71,7 +72,8 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
         });
       }
     }
-  }, [isLoading, navigate, state, isSuccess, error, isError]);
+    saveToLocalStorage('access-token', data?.data?.accessToken);
+  }, [isLoading, navigate, state, isSuccess, error, isError, data]);
 
   return (
     <div className={cn('grid gap-6', className)} {...props}>

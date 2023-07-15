@@ -10,6 +10,7 @@ import { FcGoogle } from 'react-icons/fc';
 import { useNavigate } from 'react-router-dom';
 import { useSignUpMutation } from '@/redux/features/user/userApi';
 import { toast } from 'react-toastify';
+import { saveToLocalStorage } from '../utils/localstorage.ts';
 
 type UserAuthFormProps = React.HTMLAttributes<HTMLDivElement>;
 
@@ -26,7 +27,7 @@ export function SignupForm({ className, ...props }: UserAuthFormProps) {
   const navigate = useNavigate();
 
   // API call
-  const [signUp, { isError, isLoading, isSuccess, error }] =
+  const [signUp, { data, isError, isLoading, isSuccess, error }] =
     useSignUpMutation();
 
   // react hook form
@@ -69,6 +70,7 @@ export function SignupForm({ className, ...props }: UserAuthFormProps) {
         progress: undefined,
         theme: 'light',
       });
+      saveToLocalStorage('access-token', data.data.accessToken);
     }
     if (isError === true && error) {
       toast.error(`Something went wrong! Please try again.`, {
@@ -82,7 +84,7 @@ export function SignupForm({ className, ...props }: UserAuthFormProps) {
         theme: 'light',
       });
     }
-  }, [isError, isLoading, isSuccess, navigate, error]);
+  }, [isError, isLoading, isSuccess, navigate, error, data]);
 
   // console.log(isError, error, isLoading, isSuccess);
 
