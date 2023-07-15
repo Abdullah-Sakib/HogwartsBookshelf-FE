@@ -45,7 +45,7 @@ export function SignupForm({ className, ...props }: UserAuthFormProps) {
       email: data.email,
       password: data.password,
       role: 'user',
-      phoneNumber: data.phoneNumber,
+      phone: data.phoneNumber,
     };
     signUp(newData);
   };
