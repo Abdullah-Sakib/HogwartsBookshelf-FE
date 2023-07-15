@@ -4,9 +4,9 @@ import { Button } from './ui/button';
 import { Textarea } from './ui/textarea';
 import { FiSend } from 'react-icons/fi';
 import {
-  useGetCommentsQuery,
-  usePostCommentMutation,
-} from '@/redux/features/product/productApi';
+  useGetReviewsQuery,
+  usePostReviewMutation,
+} from '@/redux/features/book/bookApi';
 
 interface IProps {
   id: string;
@@ -14,9 +14,9 @@ interface IProps {
 
 export default function ProductReview({ id }: IProps) {
   const [inputValue, setInputValue] = useState<string>('');
-  const [postComment, { isError, isLoading, isSuccess }] =
-    usePostCommentMutation();
-  const { data } = useGetCommentsQuery(id, {
+  const [postReview, { isError, isLoading, isSuccess }] =
+    usePostReviewMutation();
+  const { data } = useGetReviewsQuery(id, {
     refetchOnMountOrArgChange: true, // refetch data on component mount
     pollingInterval: 30000, // refetch data after the given interval
   });
@@ -35,7 +35,7 @@ export default function ProductReview({ id }: IProps) {
       },
     };
 
-    postComment(options);
+    postReview(options);
 
     setInputValue('');
   };
