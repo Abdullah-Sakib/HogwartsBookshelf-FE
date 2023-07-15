@@ -2,6 +2,7 @@ import banner from '@/assets/images/books.avif';
 import Book from '@/components/book';
 import Footer from '@/layouts/Footer';
 import { IBook } from '@/types/globalTypes';
+import { toast } from 'react-toastify';
 
 export default function Home() {
   const booksdata: IBook[] = [
@@ -86,6 +87,7 @@ export default function Home() {
         'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8Ym9vayUyMGNvdmVyfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60',
     },
   ];
+  const notify = () => toast('Wow so easy !');
   return (
     <>
       <div className="flex justify-between items-center h-[calc(100vh-80px)] max-w-7xl mx-auto ">
@@ -102,6 +104,7 @@ export default function Home() {
             <p>Explore 50,000+ books for free.</p>
             <p>Read from anywhre in the world.</p>
           </div>
+          <button onClick={() => notify()}>Notify</button>
         </div>
         <div className="relative w-[40%]  rounded-2xl bg-[#728a7c] border-[6px] border-[#728a7c]">
           <img className="w-full rounded-xl  " src={banner} alt="" />

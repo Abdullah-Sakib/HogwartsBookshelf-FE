@@ -1,5 +1,4 @@
 import { onAuthStateChanged } from 'firebase/auth';
-import { Toaster } from './components/ui/Toaster';
 import MainLayout from './layouts/MainLayout';
 import { auth } from './lib/firebase';
 import { setLoading, setUser } from './redux/features/user/userSlice';
@@ -22,7 +21,6 @@ function App() {
 
   return (
     <div>
-      <Toaster />
       <MainLayout />
     </div>
   );

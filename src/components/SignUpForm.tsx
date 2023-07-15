@@ -9,7 +9,7 @@ import { useForm } from 'react-hook-form';
 import { FcGoogle } from 'react-icons/fc';
 import { useNavigate } from 'react-router-dom';
 import { useSignUpMutation } from '@/redux/features/user/userApi';
-import { useToast } from './ui/use-toast';
+import { toast } from 'react-toastify';
 
 type UserAuthFormProps = React.HTMLAttributes<HTMLDivElement>;
 
@@ -23,7 +23,6 @@ interface SignupFormInputs {
 }
 
 export function SignupForm({ className, ...props }: UserAuthFormProps) {
-  const { toast } = useToast();
   const navigate = useNavigate();
 
   // API call
@@ -60,20 +59,30 @@ export function SignupForm({ className, ...props }: UserAuthFormProps) {
   React.useEffect(() => {
     if (isSuccess && !isLoading) {
       navigate('/');
-      toast({
-        description: 'You have logged in successfully',
+      toast.success('You have signed up successfully.', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
       });
     }
-    // if (isError === true) {
-    //   console.log('error happend');
-    //   navigate('/');
-    //   toast({
-    //     variant: 'destructive',
-    //     title: 'Uh oh! Something went wrong.',
-    //     description: 'There was a problem with your request.',
-    //   });
-    // }
-  }, [isError, isLoading, isSuccess, navigate, toast, error]);
+    if (isError === true && error) {
+      toast.error(`${error?.data?.message}`, {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      });
+    }
+  }, [isError, isLoading, isSuccess, navigate, error]);
 
   // console.log(isError, error, isLoading, isSuccess);
 
