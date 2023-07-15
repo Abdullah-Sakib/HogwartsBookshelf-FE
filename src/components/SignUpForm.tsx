@@ -71,9 +71,9 @@ export function SignupForm({ className, ...props }: UserAuthFormProps) {
       });
     }
     if (isError === true && error) {
-      toast.error(`${error?.data?.message}`, {
+      toast.error(`Something went wrong! Please try again.`, {
         position: 'top-right',
-        autoClose: 5000,
+        autoClose: 4000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,

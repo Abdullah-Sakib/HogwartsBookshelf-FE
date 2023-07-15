@@ -11,7 +11,7 @@ import { FcGoogle } from 'react-icons/fc';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useLoginMutation } from '@/redux/features/user/userApi';
 import { useToast } from './ui/use-toast';
-import { Toaster } from './ui/Toaster';
+import { toast } from 'react-toastify';
 
 type UserAuthFormProps = React.HTMLAttributes<HTMLDivElement>;
 
@@ -22,7 +22,6 @@ interface LoginFormInputs {
 
 export function LoginForm({ className, ...props }: UserAuthFormProps) {
   const navigate = useNavigate();
-  const { toast } = useToast();
 
   // API call
   const [login, { isError, isLoading, isSuccess, error }] = useLoginMutation();
@@ -46,13 +45,33 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
       } else {
         navigate('/');
       }
-      toast({
-        description: 'You have logged in successfully',
-      });
+      if (isSuccess && !isLoading) {
+        navigate('/');
+        toast.success('You have logged in successfully.', {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+        });
+      }
+      if (isError === true && error) {
+        toast.error(`Something went wrong! Please try again.`, {
+          position: 'top-right',
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+        });
+      }
     }
-  }, [isLoading, navigate, state, isSuccess, toast, isError, error, isError]);
-
-  console.log(isError, error, isLoading, isSuccess);
+  }, [isLoading, navigate, state, isSuccess, error, isError]);
 
   return (
     <div className={cn('grid gap-6', className)} {...props}>
