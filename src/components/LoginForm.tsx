@@ -58,6 +58,7 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
           progress: undefined,
           theme: 'light',
         });
+        saveToLocalStorage('access-token', data?.data?.accessToken);
       }
       if (isError === true && error) {
         toast.error(`Something went wrong! Please try again.`, {
@@ -72,7 +73,6 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
         });
       }
     }
-    saveToLocalStorage('access-token', data?.data?.accessToken);
   }, [isLoading, navigate, state, isSuccess, error, isError, data]);
 
   return (
