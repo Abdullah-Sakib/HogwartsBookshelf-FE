@@ -1,6 +1,5 @@
 import banner from '@/assets/images/books.avif';
 import Book from '@/components/book';
-import Footer from '@/layouts/Footer';
 import { useGetBooksQuery } from '@/redux/features/book/bookApi';
 
 export default function Home() {
@@ -31,7 +30,6 @@ export default function Home() {
         </div>
         <Book data={data?.data ?? []} />
       </div>
-      <Footer />
     </>
   );
 }
