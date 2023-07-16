@@ -1,13 +1,70 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { useSingleBookQuery } from '@/redux/features/book/bookApi';
+import {
+  useDeleteBookMutation,
+  useSingleBookQuery,
+} from '@/redux/features/book/bookApi';
 import { getFromLocalStorage } from '@/utils/localstorage';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '../components/ui/altert-dialog';
+import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
 export default function BookDetails() {
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  // API
+  const [deleteBook, { data, isSuccess, isLoading, isError, error }] =
+    useDeleteBookMutation();
+  const navigate = useNavigate();
+
   const user = JSON.parse(getFromLocalStorage('user-info')!);
 
   const { id } = useParams();
-  const { data: book, isLoading, error } = useSingleBookQuery(id);
+  const { data: book } = useSingleBookQuery(id);
+
+  useEffect(() => {
+    if (confirmDelete === true) {
+      deleteBook(book?.data?.id);
+    }
+  }, [confirmDelete]);
+
+  useEffect(() => {
+    if (isSuccess && !isLoading) {
+      navigate('/');
+      toast.success('You have logged in successfully.', {
+        position: 'top-right',
+        autoClose: 300,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      });
+    }
+    if (isError === true && error) {
+      toast.error(`Something went wrong! Please try again.`, {
+        position: 'top-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      });
+    }
+  }, [isLoading, navigate, isSuccess, error, isError, data]);
+  console.log(data, isLoading, isError, error, confirmDelete);
 
   return (
     <>
@@ -139,9 +196,31 @@ export default function BookDetails() {
                         Edit
                       </button>
                     </Link>
-                    <button className="flex ml-auto text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-red-600 rounded">
-                      Delete
-                    </button>
+
+                    <AlertDialog>
+                      <AlertDialogTrigger className="flex ml-auto text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-red-600 rounded">
+                        Delete
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>
+                            Are you absolutely sure?
+                          </AlertDialogTitle>
+                          <AlertDialogDescription>
+                            This will permanently delete your book from our
+                            servers.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={() => setConfirmDelete(true)}
+                          >
+                            Continue
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
                   </div>
                 )}
 
