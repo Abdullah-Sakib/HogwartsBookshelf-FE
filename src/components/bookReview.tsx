@@ -3,7 +3,6 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { Button } from './ui/button';
-import { Textarea } from './ui/textarea';
 import { FiSend } from 'react-icons/fi';
 import { useAddReviewMutation } from '@/redux/features/book/bookApi';
 import { getFromLocalStorage } from '@/utils/localstorage';

@@ -19,15 +19,30 @@ import {
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import BookReview from '@/components/bookReview';
+import {
+  useAddToWishlistMutation,
+  useGetWishlistQuery,
+} from '@/redux/features/wishlist/wishlistApi';
 
 export default function BookDetails() {
+  const user = JSON.parse(getFromLocalStorage('user-info')!);
   const [confirmDelete, setConfirmDelete] = useState(false);
   // API
   const [deleteBook, { data, isSuccess, isLoading, isError, error }] =
     useDeleteBookMutation();
-  const navigate = useNavigate();
+  const [
+    addToWishlist,
+    {
+      data: wishlistData,
+      isSuccess: wishlistSuccess,
+      isLoading: isWishlistLoading,
+      isError: isWishlistError,
+      error: wishlistError,
+    },
+  ] = useAddToWishlistMutation();
+  const { data: wishlist } = useGetWishlistQuery(user?._id);
 
-  const user = JSON.parse(getFromLocalStorage('user-info')!);
+  const navigate = useNavigate();
 
   const { id } = useParams();
   const { data: book } = useSingleBookQuery(id);
@@ -43,7 +58,7 @@ export default function BookDetails() {
       navigate('/');
       toast.success('You have logged in successfully.', {
         position: 'top-right',
-        autoClose: 300,
+        autoClose: 3000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -64,7 +79,76 @@ export default function BookDetails() {
         theme: 'light',
       });
     }
-  }, [isLoading, navigate, isSuccess, error, isError, data]);
+
+    if (wishlistSuccess && !isWishlistLoading) {
+      toast.success('Added to wishlist', {
+        position: 'top-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      });
+    }
+
+    if (isWishlistError === true && wishlistError) {
+      toast.error(`Something went wrong! Please try again.`, {
+        position: 'top-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      });
+    }
+  }, [
+    isLoading,
+    navigate,
+    isSuccess,
+    error,
+    isError,
+    data,
+    wishlistData,
+    isWishlistLoading,
+    wishlistError,
+    wishlistSuccess,
+    isWishlistError,
+  ]);
+
+  const alreadyAddedToWishlist = wishlist?.data?.wishlist?.find(
+    (bookId: string) => bookId === id
+  );
+
+  const handleAddToWishlist = () => {
+    if (!user) {
+      return;
+    }
+    if (alreadyAddedToWishlist) {
+      toast.error(`Already added to wishlist`, {
+        position: 'top-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      });
+      return;
+    }
+
+    const object = {
+      userId: user?._id,
+      email: user?.email,
+      bookId: id,
+    };
+
+    addToWishlist(object);
+  };
 
   return (
     <>
@@ -227,7 +311,12 @@ export default function BookDetails() {
                 <button className="flex ml-auto text-white bg-green-500 border-0 py-2 px-6 focus:outline-none hover:bg-green-600 rounded">
                   Read Soon
                 </button>
-                <button className="rounded-full w-10 h-10 bg-gray-200 p-0 border-0 inline-flex items-center justify-center text-gray-500 ml-4">
+                <button
+                  onClick={handleAddToWishlist}
+                  className={`rounded-full w-10 h-10 bg-gray-200 p-0 border-0 inline-flex items-center justify-center text-gray-500 ml-4 ${
+                    alreadyAddedToWishlist && 'bg-pink-500 text-white'
+                  }`}
+                >
                   <svg
                     fill="currentColor"
                     strokeLinecap="round"
