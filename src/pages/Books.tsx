@@ -10,12 +10,61 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useGetBooksQuery } from '@/redux/features/book/bookApi';
+import { IBook } from '@/types/globalTypes';
 import { useState } from 'react';
 
 const Books = () => {
-  const [genre, setGenre] = useState('');
-  const [publicationYear, setPublicationYear] = useState('');
-  const { data } = useGetBooksQuery('limit=30');
+  const [searchQuery, setSearchQuery] = useState({
+    queryString: '',
+    genre: '',
+    year: '',
+  });
+  const constructUrl = () => {
+    let url = '';
+    if (searchQuery.genre && searchQuery.queryString && searchQuery.year) {
+      url = `genre=${searchQuery.genre}&searchTerm=${searchQuery.queryString}&publication_year=${searchQuery.year}`;
+    } else if (searchQuery.genre && searchQuery.queryString) {
+      url = `genre=${searchQuery.genre}&searchTerm=${searchQuery.queryString}`;
+    } else if (searchQuery.genre && searchQuery.year) {
+      url = `genre=${searchQuery.genre}&publication_year=${searchQuery.year}`;
+    } else if (searchQuery.queryString && searchQuery.year) {
+      url = `searchTerm=${searchQuery.queryString}&publication_year=${searchQuery.year}`;
+    } else if (searchQuery.genre) {
+      url = `genre=${searchQuery.genre}`;
+    } else if (searchQuery.queryString) {
+      url = `searchTerm=${searchQuery.queryString}`;
+    } else if (searchQuery.year) {
+      url = `publication_year=${searchQuery.year}`;
+    }
+    return url;
+  };
+
+  const url = constructUrl();
+
+  const { data, isLoading } = useGetBooksQuery(url);
+  const { data: filterData } = useGetBooksQuery('');
+
+  const genre: IBook[] | undefined = filterData?.data
+    ?.filter((item: IBook, index: number, array: IBook[]) => {
+      // Check if the current item's genre is unique in the array
+      return (
+        array.findIndex((element) => element.genre === item.genre) === index
+      );
+    })
+    .sort((a: IBook, b: IBook) => a.genre.localeCompare(b.genre));
+
+  const year: IBook[] | undefined = filterData?.data
+    ?.filter((item: IBook, index: number, array: IBook[]) => {
+      // Check if the current item's publicationYear is unique in the array
+      return (
+        array.findIndex(
+          (element) => element?.publication_year === item.publication_year
+        ) === index
+      );
+    })
+    .sort((a: IBook, b: IBook) =>
+      b.publication_year.localeCompare(a.publication_year)
+    );
 
   return (
     <div className="container">
@@ -23,43 +72,56 @@ const Books = () => {
         <Input
           type="text"
           className="w-72 mr-3"
+          onChange={(e) =>
+            setSearchQuery({
+              ...searchQuery,
+              queryString: e.target.value,
+            })
+          }
           placeholder="Search by Title, Author, or Genre."
         />
-        <Select onValueChange={(value) => setGenre(value)}>
+        <Select
+          onValueChange={(value) =>
+            setSearchQuery({
+              ...searchQuery,
+              genre: value,
+            })
+          }
+        >
           <SelectTrigger className="w-[200px] mr-3">
             <SelectValue placeholder="Filter by genre" />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
-              <SelectLabel>Genre</SelectLabel>
-              <SelectItem value="History">History</SelectItem>
-              <SelectItem value="Fiction">Fiction</SelectItem>
-              <SelectItem value="Thriller">Thriller</SelectItem>
-              <SelectItem value="Fantasy">Fantasy</SelectItem>
-              <SelectItem value="Romance">Romance</SelectItem>
-              <SelectItem value="Fantasy">Fantasy</SelectItem>
-              <SelectItem value="Coming-of-Age Fiction">
-                Coming-of-Age Fiction
+              <SelectItem value="" className="font-bold">
+                Genre
               </SelectItem>
-              <SelectItem value="Science Fiction">Science Fiction</SelectItem>
-              <SelectItem value="Classic Literature">
-                Classic Literature
-              </SelectItem>
+              {genre?.map((item) => (
+                <SelectItem value={item?.genre}>{item?.genre}</SelectItem>
+              ))}
             </SelectGroup>
           </SelectContent>
         </Select>
 
-        <Select onValueChange={(value) => setPublicationYear(value)}>
+        <Select
+          onValueChange={(value) =>
+            setSearchQuery({
+              ...searchQuery,
+              year: value,
+            })
+          }
+        >
           <SelectTrigger className="w-[200px]">
             <SelectValue placeholder="Filter by publication year" />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
-              <SelectLabel>Publication year</SelectLabel>
-              <SelectItem value="2011">2011</SelectItem>
-              <SelectItem value="1988">1988</SelectItem>
-              <SelectItem value="2003">2003</SelectItem>
-              <SelectItem value="1813">1813</SelectItem>
+              <SelectItem value="">Publication year</SelectItem>
+              {year?.map((item) => (
+                <SelectItem value={item?.publication_year}>
+                  {item?.publication_year}
+                </SelectItem>
+              ))}
             </SelectGroup>
           </SelectContent>
         </Select>

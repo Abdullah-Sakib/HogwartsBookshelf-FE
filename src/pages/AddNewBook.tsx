@@ -56,6 +56,7 @@ const AddNewBook = () => {
       author,
       genre,
       publication_date: publicationDate,
+      publication_year: new Date(publicationDate).getFullYear().toString(),
       image: imageData?.data?.url,
       creator: user.id,
     };
@@ -89,7 +90,7 @@ const AddNewBook = () => {
         theme: 'light',
       });
     }
-  }, [isLoading, isSuccess, error, isError, data]);
+  }, [isLoading, isSuccess, error, isError, data, navigate]);
 
   return (
     <section className="text-gray-600 body-font relative">
