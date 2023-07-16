@@ -5,7 +5,6 @@ import { getFromLocalStorage } from '@/utils/localstorage';
 const Wishlist = () => {
   const user = JSON.parse(getFromLocalStorage('user-info')!);
   const { data: wishlist } = useGetWishlistQuery(user?._id);
-  console.log(wishlist?.data?.wishlist);
   return (
     <div className="container mt-16">
       <h1 className="text-3xl mb-8 text-center font-semibold">Wishlist</h1>

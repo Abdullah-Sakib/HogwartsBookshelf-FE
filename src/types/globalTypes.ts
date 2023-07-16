@@ -6,4 +6,5 @@ export interface IBook {
   publication_date: string;
   publication_year: string;
   image: string;
+  finishedReading?: boolean;
 }

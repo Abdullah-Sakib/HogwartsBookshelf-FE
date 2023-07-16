@@ -1,5 +1,5 @@
-import { useAppSelector } from '@/redux/hooks';
-import { ReactNode } from 'react';
+import { getFromLocalStorage } from '@/utils/localstorage';
+import React, { ReactNode } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 
 interface IProps {
@@ -7,18 +7,15 @@ interface IProps {
 }
 
 const PrivateRoute = ({ children }: IProps) => {
-  const { user, isLoading } = useAppSelector((state) => state.user);
+  const user = JSON.parse(getFromLocalStorage('user-info')!);
 
   const { pathname } = useLocation();
 
-  if (isLoading) {
-    return <>Loading...</>;
-  }
-
-  if (!user.email && !isLoading) {
+  if (!user?.email) {
     return <Navigate to="/login" state={{ path: pathname }} />;
   }
-  return children;
+
+  return <React.Fragment>{children}</React.Fragment>;
 };
 
 export default PrivateRoute;

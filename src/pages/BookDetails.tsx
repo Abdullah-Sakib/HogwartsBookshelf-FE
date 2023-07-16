@@ -24,6 +24,10 @@ import {
   useGetWishlistQuery,
 } from '@/redux/features/wishlist/wishlistApi';
 import { IBook } from '@/types/globalTypes';
+import {
+  useAddToReadSoonMutation,
+  useGetReadSoonListQuery,
+} from '@/redux/features/readSoon/readSoonApi';
 
 export default function BookDetails() {
   const user = JSON.parse(getFromLocalStorage('user-info')!);
@@ -41,7 +45,18 @@ export default function BookDetails() {
       error: wishlistError,
     },
   ] = useAddToWishlistMutation();
+  const [
+    addToReadSoon,
+    {
+      data: readSoonData,
+      isSuccess: readSoonSuccess,
+      isLoading: isReadSoonLoading,
+      isError: isReadSoonError,
+      error: readSoonError,
+    },
+  ] = useAddToReadSoonMutation();
   const { data: wishlist } = useGetWishlistQuery(user?._id);
+  const { data: readSoonList } = useGetReadSoonListQuery(user?._id);
 
   const navigate = useNavigate();
 
@@ -106,6 +121,32 @@ export default function BookDetails() {
         theme: 'light',
       });
     }
+
+    if (readSoonSuccess && !isReadSoonLoading) {
+      toast.success('Added to read soon list', {
+        position: 'top-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      });
+    }
+
+    if (isReadSoonError === true && readSoonError) {
+      toast.error(`Something went wrong! Please try again.`, {
+        position: 'top-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      });
+    }
   }, [
     isLoading,
     navigate,
@@ -118,9 +159,11 @@ export default function BookDetails() {
     wishlistError,
     wishlistSuccess,
     isWishlistError,
+    readSoonSuccess,
+    isReadSoonLoading,
+    isReadSoonError,
+    readSoonError,
   ]);
-
-  console.log(wishlist?.data?.wishlist);
 
   const alreadyAddedToWishlist = wishlist?.data?.wishlist?.find(
     (book: IBook) => book?._id === id
@@ -151,6 +194,37 @@ export default function BookDetails() {
     };
 
     addToWishlist(object);
+  };
+
+  const alreadyAddedToReadSoonList = readSoonList?.data?.wishlist?.find(
+    (book: IBook) => book?._id === id
+  );
+
+  const handleAddToReadSoon = () => {
+    if (!user) {
+      return;
+    }
+    if (alreadyAddedToReadSoonList) {
+      toast.error(`Already added to wishlist`, {
+        position: 'top-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      });
+      return;
+    }
+
+    const object = {
+      userId: user?._id,
+      email: user?.email,
+      bookId: book?.data,
+    };
+
+    addToReadSoon(object);
   };
 
   return (
@@ -311,7 +385,10 @@ export default function BookDetails() {
                   </div>
                 )}
 
-                <button className="flex ml-auto text-white bg-green-500 border-0 py-2 px-6 focus:outline-none hover:bg-green-600 rounded">
+                <button
+                  onClick={handleAddToReadSoon}
+                  className="flex ml-auto text-white bg-green-500 border-0 py-2 px-6 focus:outline-none hover:bg-green-600 rounded"
+                >
                   Read Soon
                 </button>
                 <button

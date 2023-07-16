@@ -12,8 +12,10 @@ import {
 import { useGetBooksQuery } from '@/redux/features/book/bookApi';
 import { IBook } from '@/types/globalTypes';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Books = () => {
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState({
     queryString: '',
     genre: '',
@@ -127,6 +129,13 @@ const Books = () => {
         </Select>
       </div>
       <Book data={data?.data ?? []} />
+      <button
+        type="submit"
+        onClick={() => navigate('/add-new-book')}
+        className="flex mx-auto text-white bg-yellow-500 border-0 py-2 px-8 focus:outline-none hover:bg-yellow-600 rounded text-lg mb-10"
+      >
+        Add Book
+      </button>
     </div>
   );
 };

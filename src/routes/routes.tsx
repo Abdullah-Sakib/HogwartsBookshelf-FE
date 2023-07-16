@@ -4,12 +4,13 @@ import Login from '@/pages/Login';
 import NotFound from '@/pages/NotFound';
 import Home from '@/pages/Home';
 import Signup from '@/pages/Signup';
-import PrivateRoute from './privateRoute';
 import Books from '@/pages/Books';
 import BookDetails from '@/pages/BookDetails';
 import AddNewBook from '@/pages/AddNewBook';
 import EditBook from '@/pages/EditBook';
 import Wishlist from '@/pages/Wishlist';
+import ReadSoon from '@/pages/ReadSoon';
+import PrivateRoute from './privateRoute';
 
 const routes = createBrowserRouter([
   {
@@ -26,7 +27,19 @@ const routes = createBrowserRouter([
       },
       {
         path: '/wishlist',
-        element: <Wishlist />,
+        element: (
+          <PrivateRoute>
+            <Wishlist />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: '/read-soon',
+        element: (
+          <PrivateRoute>
+            <ReadSoon />
+          </PrivateRoute>
+        ),
       },
       {
         path: '/book-details/:id',
@@ -34,14 +47,18 @@ const routes = createBrowserRouter([
       },
       {
         path: '/edit-book/:id',
-        element: <EditBook />,
+        element: (
+          <PrivateRoute>
+            <EditBook />
+          </PrivateRoute>
+        ),
       },
       {
         path: '/add-new-book',
         element: (
-          // <PrivateRoute>
-          <AddNewBook />
-          // </PrivateRoute>
+          <PrivateRoute>
+            <AddNewBook />
+          </PrivateRoute>
         ),
       },
     ],

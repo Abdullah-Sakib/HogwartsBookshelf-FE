@@ -4,7 +4,7 @@ const wishlistApi = api.injectEndpoints({
   endpoints: (builder) => ({
     addToWishlist: builder.mutation({
       query: (data) => ({
-        url: `/wishlist/:${data?.userId}`,
+        url: `/wishlist/${data?.userId}`,
         method: 'PATCH',
         body: data,
       }),

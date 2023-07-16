@@ -54,15 +54,13 @@ export default function Navbar() {
                     </Button>
                   </li>
                   <li>
-                    <Link to="/wishlist">
-                      <Button variant="ghost">
-                        <AiOutlineFolderAdd size="25" />
-                      </Button>
-                    </Link>
+                    <Button variant="link">
+                      <Link to="/wishlist">Wishlist</Link>
+                    </Button>
                   </li>
                   <li>
-                    <Button variant="ghost">
-                      <BsBookmarkStar size="23" />
+                    <Button variant="link">
+                      <Link to="/read-soon">Read soon</Link>
                     </Button>
                   </li>
                 </>
