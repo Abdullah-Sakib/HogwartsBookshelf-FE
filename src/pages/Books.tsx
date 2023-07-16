@@ -68,75 +68,88 @@ const Books = () => {
       b.publication_year.localeCompare(a.publication_year)
     );
 
-  return (
-    <div className="container">
-      <div className="flex mt-16 mb-5">
-        <Input
-          type="text"
-          className="w-72 mr-3"
-          onChange={(e) =>
-            setSearchQuery({
-              ...searchQuery,
-              queryString: e.target.value,
-            })
-          }
-          placeholder="Search by Title, Author, or Genre."
-        />
-        <Select
-          onValueChange={(value) =>
-            setSearchQuery({
-              ...searchQuery,
-              genre: value,
-            })
-          }
-        >
-          <SelectTrigger className="w-[200px] mr-3">
-            <SelectValue placeholder="Filter by genre" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectItem value="" className="font-bold">
-                Genre
-              </SelectItem>
-              {genre?.map((item) => (
-                <SelectItem value={item?.genre}>{item?.genre}</SelectItem>
-              ))}
-            </SelectGroup>
-          </SelectContent>
-        </Select>
+  if (isLoading) {
+    <div>Loading...</div>;
+  }
 
-        <Select
-          onValueChange={(value) =>
-            setSearchQuery({
-              ...searchQuery,
-              year: value,
-            })
-          }
-        >
-          <SelectTrigger className="w-[200px]">
-            <SelectValue placeholder="Filter by publication year" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectItem value="">Publication year</SelectItem>
-              {year?.map((item) => (
-                <SelectItem value={item?.publication_year}>
-                  {item?.publication_year}
-                </SelectItem>
-              ))}
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-      </div>
-      <Book data={data?.data ?? []} />
-      <button
-        type="submit"
-        onClick={() => navigate('/add-new-book')}
-        className="flex mx-auto text-white bg-yellow-500 border-0 py-2 px-8 focus:outline-none hover:bg-yellow-600 rounded text-lg mb-10"
-      >
-        Add Book
-      </button>
-    </div>
+  return (
+    <>
+      {isLoading ? (
+        <div className="flex justify-center items-center mt-16 mb-5 h-96">
+          {' '}
+          <h2> Loading...</h2>
+        </div>
+      ) : (
+        <div className="container">
+          <div className="flex mt-16 mb-5">
+            <Input
+              type="text"
+              className="w-72 mr-3"
+              onChange={(e) =>
+                setSearchQuery({
+                  ...searchQuery,
+                  queryString: e.target.value,
+                })
+              }
+              placeholder="Search by Title, Author, or Genre."
+            />
+            <Select
+              onValueChange={(value) =>
+                setSearchQuery({
+                  ...searchQuery,
+                  genre: value,
+                })
+              }
+            >
+              <SelectTrigger className="w-[200px] mr-3">
+                <SelectValue placeholder="Filter by genre" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem value="" className="font-bold">
+                    Genre
+                  </SelectItem>
+                  {genre?.map((item) => (
+                    <SelectItem value={item?.genre}>{item?.genre}</SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+
+            <Select
+              onValueChange={(value) =>
+                setSearchQuery({
+                  ...searchQuery,
+                  year: value,
+                })
+              }
+            >
+              <SelectTrigger className="w-[200px]">
+                <SelectValue placeholder="Filter by publication year" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem value="">Publication year</SelectItem>
+                  {year?.map((item) => (
+                    <SelectItem value={item?.publication_year}>
+                      {item?.publication_year}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+          <Book data={data?.data ?? []} />
+          <button
+            type="submit"
+            onClick={() => navigate('/add-new-book')}
+            className="flex mx-auto text-white bg-yellow-500 border-0 py-2 px-8 focus:outline-none hover:bg-yellow-600 rounded text-lg mb-10"
+          >
+            Add Book
+          </button>
+        </div>
+      )}
+    </>
   );
 };
 
