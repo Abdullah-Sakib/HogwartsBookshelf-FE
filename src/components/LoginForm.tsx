@@ -46,33 +46,30 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
       } else {
         navigate('/');
       }
-      if (isSuccess && !isLoading) {
-        navigate('/');
-        toast.success('You have logged in successfully.', {
-          position: 'top-right',
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'light',
-        });
-        saveToLocalStorage('access-token', data?.data?.accessToken);
-        saveToLocalStorage('user-info', JSON.stringify(data?.data?.userData));
-      }
-      if (isError === true && error) {
-        toast.error(`Something went wrong! Please try again.`, {
-          position: 'top-right',
-          autoClose: 4000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'light',
-        });
-      }
+      toast.success('You have logged in successfully.', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      });
+      saveToLocalStorage('access-token', data?.data?.accessToken);
+      saveToLocalStorage('user-info', JSON.stringify(data?.data?.userData));
+    }
+    if (isError === true && error) {
+      toast.error(`Something went wrong! Please try again.`, {
+        position: 'top-right',
+        autoClose: 4000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      });
     }
   }, [isLoading, navigate, state, isSuccess, error, isError, data]);
 

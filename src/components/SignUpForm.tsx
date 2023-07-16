@@ -73,6 +73,7 @@ export function SignupForm({ className, ...props }: UserAuthFormProps) {
       saveToLocalStorage('access-token', data.data.accessToken);
       saveToLocalStorage('user-info', JSON.stringify(data?.data?.result));
     }
+
     if (isError === true && error) {
       toast.error(`Something went wrong! Please try again.`, {
         position: 'top-right',

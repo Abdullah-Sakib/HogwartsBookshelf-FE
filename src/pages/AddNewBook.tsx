@@ -1,8 +1,17 @@
+import { useAddBookMutation } from '@/redux/features/book/bookApi';
 import { getFromLocalStorage } from '@/utils/localstorage';
+import { useEffect } from 'react';
+import { toast } from 'react-toastify';
 
 const AddNewBook = () => {
+  // API call
+  const [addBook, { data, isError, isLoading, isSuccess, error }] =
+    useAddBookMutation();
+
+  console.log(data, isSuccess, isLoading, error, isError);
+
   // user info
-  const user = getFromLocalStorage('user-info');
+  const user = JSON.parse(getFromLocalStorage('user-info')!);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -49,8 +58,36 @@ const AddNewBook = () => {
       creator: user.id,
     };
 
-    console.log(bookData);
+    addBook(bookData);
   };
+
+  useEffect(() => {
+    if (isSuccess && !isLoading) {
+      toast.success(`${data?.message}`, {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      });
+    }
+    if (isError === true && error) {
+      toast.error(`Something went wrong! Please try again.`, {
+        position: 'top-right',
+        autoClose: 4000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      });
+    }
+  }, [isLoading, isSuccess, error, isError, data]);
+
   return (
     <section className="text-gray-600 body-font relative">
       <div className="container px-5 py-24 mx-auto">
