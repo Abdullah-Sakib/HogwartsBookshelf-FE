@@ -1,13 +1,21 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { useAddBookMutation } from '@/redux/features/book/bookApi';
+import {
+  useSingleBookQuery,
+  useUpdateBookMutation,
+} from '@/redux/features/book/bookApi';
 import { getFromLocalStorage } from '@/utils/localstorage';
 import { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-const AddNewBook = () => {
+const EditBook = () => {
+  // Get the book data first
+  const { id } = useParams();
+  const { data: book } = useSingleBookQuery(id);
+
   // API call
-  const [addBook, { data, isError, isLoading, isSuccess, error }] =
-    useAddBookMutation();
+  const [updateBook, { data, isError, isLoading, isSuccess, error }] =
+    useUpdateBookMutation();
 
   // user info
   const user = JSON.parse(getFromLocalStorage('user-info')!);
@@ -22,49 +30,48 @@ const AddNewBook = () => {
     const publicationDate = (
       form.elements.namedItem('publication_date') as HTMLInputElement
     )?.value;
-
     const imageInput = form.elements.namedItem('image') as HTMLInputElement;
-
     const image =
       imageInput &&
       imageInput.files &&
       imageInput.files.length > 0 &&
       imageInput?.files[0];
 
-    const formData = new FormData();
+    let imageData;
     if (image) {
-      formData.append('image', image);
-    }
-
-    // Send POST request to ImgBB API
-    const response = await fetch(
-      'https://api.imgbb.com/1/upload?key=52da0bdc00f5234da4cd195736e4fb5f',
-      {
-        method: 'POST',
-        body: formData,
+      const formData = new FormData();
+      if (image) {
+        formData.append('image', image);
       }
-    );
-
-    // Parse response JSON
-    const imageData = await response.json();
+      // Send POST request to ImgBB API
+      const response = await fetch(
+        'https://api.imgbb.com/1/upload?key=52da0bdc00f5234da4cd195736e4fb5f',
+        {
+          method: 'POST',
+          body: formData,
+        }
+      );
+      // Parse response JSON
+      imageData = await response.json();
+    }
 
     const bookData = {
       title,
       author,
       genre,
       publication_date: publicationDate,
-      image: imageData?.data?.url,
+      image: imageData?.data?.url ? imageData?.data?.url : book?.data?.image,
       creator: user.id,
     };
 
-    addBook(bookData);
+    updateBook({ bookData, id });
   };
 
   useEffect(() => {
     if (isSuccess && !isLoading) {
       toast.success(`${data?.message}`, {
         position: 'top-right',
-        autoClose: 5000,
+        autoClose: 3000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -76,7 +83,7 @@ const AddNewBook = () => {
     if (isError === true && error) {
       toast.error(`Something went wrong! Please try again.`, {
         position: 'top-right',
-        autoClose: 4000,
+        autoClose: 3000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -87,12 +94,15 @@ const AddNewBook = () => {
     }
   }, [isLoading, isSuccess, error, isError, data]);
 
+  const date =
+    book?.data && new Date(book?.data?.publication_date).toDateString();
+
   return (
     <section className="text-gray-600 body-font relative">
       <div className="container px-5 py-24 mx-auto">
         <div className="flex flex-col text-center w-full mb-12">
           <h1 className="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">
-            Add A New Book
+            Edit Book
           </h1>
         </div>
         <div className="lg:w-1/2 md:w-2/3 mx-auto">
@@ -112,6 +122,7 @@ const AddNewBook = () => {
                   type="text"
                   id="title"
                   name="title"
+                  defaultValue={book?.data?.title}
                   className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                 />
               </div>
@@ -128,6 +139,7 @@ const AddNewBook = () => {
                   type="text"
                   id="author"
                   name="author"
+                  defaultValue={book?.data?.author}
                   className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                   data-temp-mail-org={0}
                 />
@@ -145,6 +157,7 @@ const AddNewBook = () => {
                   type="text"
                   id="genre"
                   name="genre"
+                  defaultValue={book?.data?.genre}
                   className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                   data-temp-mail-org={0}
                 />
@@ -156,24 +169,26 @@ const AddNewBook = () => {
                   htmlFor="publication_date"
                   className="leading-7 text-sm text-gray-600"
                 >
-                  Publication date
+                  Update Publication date
                 </label>
                 <input
-                  type="date"
+                  type="text"
                   id="publication_date"
                   name="publication_date"
+                  defaultValue={date}
                   className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                   data-temp-mail-org={0}
                 />
               </div>
             </div>
             <div className="p-2 w-1/2">
+              <img className="" src={book?.data.image} alt="previous image" />
               <div className="relative">
                 <label
                   htmlFor="image"
                   className="leading-7 text-sm text-gray-600"
                 >
-                  Image
+                  Update Image
                 </label>
                 <input
                   type="file"
@@ -200,4 +215,4 @@ const AddNewBook = () => {
   );
 };
 
-export default AddNewBook;
+export default EditBook;

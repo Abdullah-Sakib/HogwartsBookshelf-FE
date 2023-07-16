@@ -1,14 +1,13 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { useSingleBookQuery } from '@/redux/features/book/bookApi';
 import { getFromLocalStorage } from '@/utils/localstorage';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 export default function BookDetails() {
   const user = JSON.parse(getFromLocalStorage('user-info')!);
 
   const { id } = useParams();
   const { data: book, isLoading, error } = useSingleBookQuery(id);
-
-  console.log(book, user);
 
   return (
     <>
@@ -135,9 +134,11 @@ export default function BookDetails() {
               <div className="flex absolute bottom-0 w-full">
                 {book?.data?.creator === user?.id && (
                   <div className="flex">
-                    <button className="flex ml-auto text-white bg-yellow-500 border-0 py-2 px-6 focus:outline-none hover:bg-yellow-600 rounded mr-3">
-                      Edit
-                    </button>
+                    <Link to={`/edit-book/${book?.data?._id}`}>
+                      <button className="flex ml-auto text-white bg-yellow-500 border-0 py-2 px-6 focus:outline-none hover:bg-yellow-600 rounded mr-3">
+                        Edit
+                      </button>
+                    </Link>
                     <button className="flex ml-auto text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-red-600 rounded">
                       Delete
                     </button>
