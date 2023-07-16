@@ -15,7 +15,7 @@ import { useState } from 'react';
 const Books = () => {
   const [genre, setGenre] = useState('');
   const [publicationYear, setPublicationYear] = useState('');
-  const { data } = useGetBooksQuery(undefined);
+  const { data } = useGetBooksQuery('limit=30');
 
   return (
     <div className="container">

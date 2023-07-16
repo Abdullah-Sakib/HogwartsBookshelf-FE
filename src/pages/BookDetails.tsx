@@ -35,7 +35,7 @@ export default function BookDetails() {
     if (confirmDelete === true) {
       deleteBook(book?.data?.id);
     }
-  }, [confirmDelete]);
+  }, [confirmDelete, book, deleteBook]);
 
   useEffect(() => {
     if (isSuccess && !isLoading) {
@@ -64,7 +64,6 @@ export default function BookDetails() {
       });
     }
   }, [isLoading, navigate, isSuccess, error, isError, data]);
-  console.log(data, isLoading, isError, error, confirmDelete);
 
   return (
     <>

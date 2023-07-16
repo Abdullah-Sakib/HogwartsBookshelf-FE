@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Link } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from '../components/ui/avatar';
 import { Button } from '../components/ui/button';
@@ -12,18 +13,18 @@ import {
 } from '../components/ui/dropdown-menu';
 import { BsBookmarkStar } from 'react-icons/bs';
 import { AiOutlineFolderAdd } from 'react-icons/ai';
-import { useAppDispatch, useAppSelector } from '@/redux/hooks';
-import { signOut } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
-import { setUser } from '@/redux/features/user/userSlice';
+import {
+  getFromLocalStorage,
+  removeFromLocalStorage,
+} from '@/utils/localstorage';
 
 export default function Navbar() {
-  const { user } = useAppSelector((state) => state.user);
-  const dispatch = useAppDispatch();
+  const user = JSON.parse(getFromLocalStorage('user-info')!);
+  console.log(user, 'user info');
   const handleLogOut = () => {
-    signOut(auth).then(() => {
-      dispatch(setUser(null));
-    });
+    removeFromLocalStorage('user-info');
+    removeFromLocalStorage('access-token');
+    window.location.reload();
   };
   return (
     <nav className="w-full h-24 fixed top backdrop-blur-lg z-10">
@@ -46,21 +47,26 @@ export default function Navbar() {
                   <Link to="/books">Books</Link>
                 </Button>
               </li>
-              <li>
-                <Button variant="link" asChild>
-                  <Link to="/add-new-book">Add New Book</Link>
-                </Button>
-              </li>
-              <li>
-                <Button variant="ghost">
-                  <AiOutlineFolderAdd size="25" />
-                </Button>
-              </li>
-              <li>
-                <Button variant="ghost">
-                  <BsBookmarkStar size="23" />
-                </Button>
-              </li>
+              {user?.email && (
+                <>
+                  <li>
+                    <Button variant="link" asChild>
+                      <Link to="/add-new-book">Add New Book</Link>
+                    </Button>
+                  </li>
+                  <li>
+                    <Button variant="ghost">
+                      <AiOutlineFolderAdd size="25" />
+                    </Button>
+                  </li>
+                  <li>
+                    <Button variant="ghost">
+                      <BsBookmarkStar size="23" />
+                    </Button>
+                  </li>
+                </>
+              )}
+
               <li className="ml-5">
                 <DropdownMenu>
                   <DropdownMenuTrigger className="outline-none">
@@ -75,12 +81,17 @@ export default function Navbar() {
                   <DropdownMenuContent>
                     <DropdownMenuLabel>Account</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem className="cursor-pointer">
-                      Profile
-                    </DropdownMenuItem>
-                    <DropdownMenuItem className="cursor-pointer">
-                      Billing
-                    </DropdownMenuItem>
+                    {user?.name && (
+                      <DropdownMenuItem className="cursor-pointer">
+                        {user?.name}
+                      </DropdownMenuItem>
+                    )}
+
+                    {user?.email && (
+                      <DropdownMenuItem className="cursor-pointer">
+                        {user?.email}
+                      </DropdownMenuItem>
+                    )}
 
                     {!user?.email && (
                       <>
@@ -98,7 +109,7 @@ export default function Navbar() {
                       </>
                     )}
 
-                    {user.email && (
+                    {user?.email && (
                       <DropdownMenuItem
                         className="cursor-pointer"
                         onClick={() => handleLogOut()}

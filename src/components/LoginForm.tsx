@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 'use client';
 
 import * as React from 'react';
@@ -38,7 +39,6 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
   };
 
   const { state } = useLocation();
-
   React.useEffect(() => {
     if (isSuccess && !isLoading) {
       if (state?.path) {
@@ -48,7 +48,7 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
       }
       toast.success('You have logged in successfully.', {
         position: 'top-right',
-        autoClose: 5000,
+        autoClose: 3000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -60,16 +60,18 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
       saveToLocalStorage('user-info', JSON.stringify(data?.data?.userData));
     }
     if (isError === true && error) {
-      toast.error(`Something went wrong! Please try again.`, {
-        position: 'top-right',
-        autoClose: 4000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
-      });
+      if ('data' in error) {
+        toast.error(`${(error as any).data!.message}`, {
+          position: 'top-right',
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+        });
+      }
     }
   }, [isLoading, navigate, state, isSuccess, error, isError, data]);
 

@@ -2,12 +2,15 @@
 import { useAddBookMutation } from '@/redux/features/book/bookApi';
 import { getFromLocalStorage } from '@/utils/localstorage';
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 const AddNewBook = () => {
   // API call
   const [addBook, { data, isError, isLoading, isSuccess, error }] =
     useAddBookMutation();
+
+  const navigate = useNavigate();
 
   // user info
   const user = JSON.parse(getFromLocalStorage('user-info')!);
@@ -62,6 +65,7 @@ const AddNewBook = () => {
 
   useEffect(() => {
     if (isSuccess && !isLoading) {
+      navigate('/');
       toast.success(`${data?.message}`, {
         position: 'top-right',
         autoClose: 5000,
