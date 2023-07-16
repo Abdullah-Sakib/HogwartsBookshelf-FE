@@ -1,13 +1,9 @@
 import { useSingleBookQuery } from '@/redux/features/book/bookApi';
-import { useAppDispatch } from '@/redux/hooks';
 import { useParams } from 'react-router-dom';
 
 export default function BookDetails() {
-  const dispatch = useAppDispatch();
   const { id } = useParams();
   const { data: book, isLoading, error } = useSingleBookQuery(id);
-
-  console.log(book);
 
   return (
     <>

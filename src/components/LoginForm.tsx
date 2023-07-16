@@ -59,6 +59,7 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
           theme: 'light',
         });
         saveToLocalStorage('access-token', data?.data?.accessToken);
+        saveToLocalStorage('user-info', JSON.stringify(data?.data?.userData));
       }
       if (isError === true && error) {
         toast.error(`Something went wrong! Please try again.`, {
