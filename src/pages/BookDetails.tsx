@@ -23,6 +23,7 @@ import {
   useAddToWishlistMutation,
   useGetWishlistQuery,
 } from '@/redux/features/wishlist/wishlistApi';
+import { IBook } from '@/types/globalTypes';
 
 export default function BookDetails() {
   const user = JSON.parse(getFromLocalStorage('user-info')!);
@@ -119,8 +120,10 @@ export default function BookDetails() {
     isWishlistError,
   ]);
 
+  console.log(wishlist?.data?.wishlist);
+
   const alreadyAddedToWishlist = wishlist?.data?.wishlist?.find(
-    (bookId: string) => bookId === id
+    (book: IBook) => book?._id === id
   );
 
   const handleAddToWishlist = () => {
@@ -144,7 +147,7 @@ export default function BookDetails() {
     const object = {
       userId: user?._id,
       email: user?.email,
-      bookId: id,
+      bookId: book?.data,
     };
 
     addToWishlist(object);
