@@ -20,7 +20,6 @@ import {
 
 export default function Navbar() {
   const user = JSON.parse(getFromLocalStorage('user-info')!);
-  console.log(user, 'user info');
   const handleLogOut = () => {
     removeFromLocalStorage('user-info');
     removeFromLocalStorage('access-token');

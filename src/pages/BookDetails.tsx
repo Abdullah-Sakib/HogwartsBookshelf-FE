@@ -18,6 +18,7 @@ import {
 } from '../components/ui/altert-dialog';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import BookReview from '@/components/bookReview';
 
 export default function BookDetails() {
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -244,7 +245,7 @@ export default function BookDetails() {
         </div>
       </section>
 
-      {/* <ProductReview id={id!} /> */}
+      <BookReview book={book?.data} />
     </>
   );
 }
