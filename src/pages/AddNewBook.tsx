@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { useAddBookMutation } from '@/redux/features/book/bookApi';
 import { getFromLocalStorage } from '@/utils/localstorage';
 import { useEffect } from 'react';
@@ -7,8 +8,6 @@ const AddNewBook = () => {
   // API call
   const [addBook, { data, isError, isLoading, isSuccess, error }] =
     useAddBookMutation();
-
-  console.log(data, isSuccess, isLoading, error, isError);
 
   // user info
   const user = JSON.parse(getFromLocalStorage('user-info')!);
@@ -189,7 +188,7 @@ const AddNewBook = () => {
             <div className="p-2 w-full">
               <button
                 type="submit"
-                className="flex mx-auto text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg"
+                className="flex mx-auto text-white bg-yellow-500 border-0 py-2 px-8 focus:outline-none hover:bg-yellow-600 rounded text-lg"
               >
                 Button
               </button>
